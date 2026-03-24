@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>동원참치 — 제47회 제아페 기획서 (READABLE & VERTICAL Skin)</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* 팀장님 지정 컬러코드 */
+    --deep-blue: #1f3f99;
+    --mid-blue: #005cb9;
+    --cyan: #00a0e9;
+    --red: #e30019;
+    --orange: #f45321;
+    --yellow: #ffe906;
+
+    /* 배경 및 텍스트 시스템 컬러 */
+    --bg-dark: #0a0e17; 
+    --bg-card: rgba(18, 24, 38, 0.6); 
+    --border-card: rgba(255, 255, 255, 0.08);
+    --text-main: rgba(255, 255, 255, 0.9);
+    --text-sub: rgba(255, 255, 255, 0.6);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background-color: var(--bg-dark);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(31, 63, 153, 0.2) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(0, 92, 185, 0.1) 0px, transparent 50%);
+    color: var(--text-main);
+    font-family: 'Pretendard', sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Typography */
+  h1, h2, h3 { font-family: 'Black Han Sans', sans-serif; font-weight: 400; letter-spacing: -1px; margin-bottom: 16px; }
+  p { font-size: 1.15rem; line-height: 1.6; color: var(--text-main); font-weight: 400; word-break: keep-all; }
+  .highlight-red { color: var(--red); }
+  .highlight-yellow { color: var(--yellow); }
+  .highlight-cyan { color: var(--cyan); }
+
+  /* Layout Components */
+  .presentation { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0; visibility: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 10vw; 
+    transition: opacity 0.5s ease-in-out, visibility 0.5s;
+  }
+
+  .slide.active { opacity: 1; visibility: visible; }
+
+  .slide-content-wrapper { width: 100%; max-width: 1400px; margin: 0 auto; }
+
+  /* Grid Layouts - Vertical Image Optimized */
+  .grid-2-image-split {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 텍스트 넓게, 이미지 날렵하게 */
+    gap: 6vw;
+    align-items: center;
+  }
+  
+  .grid-3-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2vw;
+    margin-top: 40px;
+  }
+
+  /* Animations */
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+  .slide.active .reveal { opacity: 1; transform: translateY(0); }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+
+  /* Badge & Titles */
+  .section-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: linear-gradient(90deg, var(--deep-blue), var(--cyan));
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    letter-spacing: 1.5px;
+  }
+
+  .slide-title { font-size: clamp(36px, 4vw, 56px); line-height: 1.2; margin-bottom: 24px; }
+  .slide-subtitle { font-size: 1.3rem; color: var(--text-sub); font-weight: 500; margin-bottom: 40px;}
+
+  /* Image Area - Vertical (9:16) Optimized */
+  .image-area-vertical {
+    width: 100%; aspect-ratio: 9 / 16; /* 9:16 비율 유지 */
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-card);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .image-area-vertical:hover { transform: translateY(-5px); }
+
+  /* 실제 이미지가 삽입될 경우를 대비한 스타일 */
+  .image-area-vertical img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Cards */
+  .info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 16px;
+    padding: 32px;
+    backdrop-filter: blur(10px);
+  }
+  .info-card h3 { font-size: 1.6rem; margin-bottom: 16px; font-weight: 700; color: white;}
+  .info-card p { font-size: 1.05rem; color: var(--text-sub); }
+
+  /* Idea Focus Text Area */
+  .idea-text-box { margin-bottom: 30px; padding-left: 20px; border-left: 4px solid var(--yellow); }
+  .focus-keyword { font-size: 2rem; color: var(--yellow); margin-bottom: 12px; font-weight: 800;}
+  
+  .support-text-box {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .support-text-box h4 { font-size: 1rem; color: var(--cyan); margin-bottom: 8px; font-weight: 600; }
+  .support-text-box p { font-size: 1rem; color: rgba(255,255,255,0.5); line-height: 1.5;}
+
+  /* Cover Slide Specific */
+  .cover-title { font-size: clamp(50px, 7vw, 90px); line-height: 1.15; margin-bottom: 24px; }
+  .cover-subtitle { font-size: 1.5rem; color: var(--text-sub); font-weight: 400; }
+
+  /* VS Container */
+  .vs-container { display: flex; align-items: stretch; justify-content: center; gap: 30px; margin-top: 40px; }
+  .vs-box { flex: 1; padding: 50px 40px; border-radius: 16px; background: var(--bg-card); border: 1px solid var(--border-card); }
+  .vs-box h3 { font-size: 2.5rem; margin-bottom: 24px; text-align: center; }
+  .vs-box ul { list-style: none; padding: 0; margin-top: 20px;}
+  .vs-box li { font-size: 1.15rem; color: var(--text-sub); margin-bottom: 12px; text-align: center; }
+  .vs-arrow { font-size: 3rem; color: var(--text-sub); align-self: center; }
+
+  /* Navigation */
+  .nav-controls {
+    position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 20px; align-items: center; z-index: 100;
+  }
+  .nav-btn {
+    background: transparent; border: none; color: rgba(255,255,255,0.3);
+    font-size: 1.5rem; cursor: pointer; transition: color 0.3s;
+  }
+  .nav-btn:hover { color: white; }
+  .progress-container { width: 150px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+  .progress-bar { height: 100%; background: var(--cyan); width: 0%; transition: width 0.3s ease; }
+</style>
+</head>
+<body>
+
+<div class="presentation" id="presentation">
+
+  <div class="slide active">
+    <div class="slide-content-wrapper reveal text-center" style="text-align: center;">
+      <div class="section-badge delay-1">제47회 제일기획 아이디어 페스티벌</div>
+      <h1 class="cover-title delay-2">동원참치,<br><span class="highlight-red">강철</span>의 반격</h1>
+      <p class="cover-subtitle delay-3">단점을 압도적 장점으로 뒤집어, 가장 쓸모 있는 캔으로</p>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-content-wrapper">
+      <div class="reveal" style="text-align: center;">
+        <div class="section-badge" style="background: var(--mid-blue);">BACKGROUND</div>
+        <h2 class="slide-title">1등 브랜드의 <span class="highlight-yellow">아킬레스건</span></h2>
+        <p class="slide-subtitle">2049 세대의 고단백 수요는 충분하지만, 구매의 마지막 순간 치명적인 허들에 부딪힙니다.</p>
+      </div>
+      
+      <div class="grid-3-cards reveal delay-1">
+        <div class="info-card" style="border-top: 3px solid var(--cyan);">
+          <h3>[기회] 헬시 플레저</h3>
+          <p>2049 다이어트 타깃에게 '단백질'은 필수 요소입니다. 참치의 영양학적 가치는 닭가슴살을 완벽하게 대체할 수 있을 만큼 훌륭합니다.</p>
+        </div>
+        <div class="info-card" style="border-top: 3px solid var(--red);">
+          <h3 class="highlight-red">[위기] 강철 캔 뚜껑</h3>
+          <p>"따기 힘들고, 손 베일 것 같다."<br>강철 뚜껑이 주는 물리적 불편함은 타깃의 구매 전환을 가로막는 가장 강력한 심리적 장벽입니다.</p>
+        </div>
+        <div class="info-card" style="border-top: 3px solid var(--deep-blue);">
+          <h3>[위협] 특허 딜레마</h3>
+          <p>경쟁사(사조)는 이미 '안심따개(이지필)' 특허로 편리함을 선점했습니다. 우리는 흉내 낼 수도, 이대로 머무를 수도 없는 딜레마에 빠졌습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-content-wrapper">
+      <div class="reveal" style="text-align: center;">
+        <div class="section-badge">INSIGHT</div>
+        <h2 class="slide-title">단점을 <span class="highlight-cyan">압도적 장점</span>으로 뒤집어라</h2>
+        <p class="slide-subtitle">어차피 바꿀 수 없는 철뚜껑이라면, 오직 철뚜껑만이 할 수 있는 강력한 <strong class="highlight-red">쓸모</strong>로 둔갑시키는 것입니다.</p>
+      </div>
+      <div class="vs-container reveal delay-1">
+        <div class="vs-box before">
+          <h3 class="highlight-red">불편한 뚜껑</h3>
+          <ul>
+            <li>열기 힘들다</li>
+            <li>손이 베일 위험이 있다</li>
+            <li>남으면 덮어두기 곤란하다</li>
+          </ul>
+        </div>
+        <div class="vs-arrow">➔</div>
+        <div class="vs-box after" style="border-color: rgba(0, 160, 233, 0.4);">
+          <h3 class="highlight-cyan">가장 유용한 도구</h3>
+          <ul>
+            <li>어떤 소재보다 <strong class="highlight-yellow">단단하다</strong></li>
+            <li>절삭력이 <strong class="highlight-yellow">뛰어나다</strong></li>
+            <li>완벽한 밀폐를 <strong class="highlight-yellow">지탱한다</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-content-wrapper grid-2-image-split">
+      <div class="reveal">
+        <div class="section-badge">IDEA 01</div>
+        <h2 class="slide-title">귀찮음을 비틀다<br><span class="highlight-yellow">샐러드 텀블러</span></h2>
+        
+        <div class="idea-text-box">
+          <div class="focus-keyword">자동화로 해결한 '최초의 개봉'</div>
+          <p>텀블러 하단에 캔 장착 후 돌리면 자동 오픈됩니다. 위험한 개봉 과정을 '돌리는 재미'로 바꾸고, 참치와 샐러드를 가장 간편하게 믹스할 수 있습니다.</p>
+        </div>
+
+        <div class="support-text-box">
+          <h4>에이전트의 마케팅 포인트</h4>
+          <p>타깃은 다이어트 레시피 중 '참치 샐러드'를 선호하지만 캔 따기가 번거로워 닭가슴살을 택합니다. 이 굿즈는 참치를 샐러드와 직결시키는 TPO를 창출합니다.</p>
+        </div>
+      </div>
+      <div class="reveal delay-1 image-area-vertical" style="border-color: rgba(255, 233, 6, 0.2); box-shadow: 0 0 20px rgba(255, 233, 6, 0.1);">
+        <img src="idea1.jpg" alt="샐러드 텀블러 목업">
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-content-wrapper grid-2-image-split">
+      <div class="reveal">
+        <div class="section-badge">IDEA 02</div>
+        <h2 class="slide-title">보관의 한계를 비틀다<br><span class="highlight-yellow">참-씰(Seal) 링</span></h2>
+        
+        <div class="idea-text-box" style="border-color: var(--cyan);">
+          <div class="focus-keyword" style="color: var(--cyan);">강철이기에 가능한 '신선 봉인'</div>
+          <p>형태가 굳건히 유지되는 강철 뚜껑이기에 가능합니다. 캔 테두리에 전용 실리콘 링만 씌우면 완벽한 밀폐 용기가 되어 냉장고 냄새 없는 보관이 가능합니다.</p>
+        </div>
+
+        <div class="support-text-box">
+          <h4>에이전트의 마케팅 포인트</h4>
+          <p>1인 가구는 참치 한 캔을 다 쓰지 못하는 경우가 많습니다. 호일 형태의 이지필은 절대 흉내 낼 수 없는 강철 뚜껑만의 완벽한 봉인 능력으로 구매 허들을 제거합니다.</p>
+        </div>
+      </div>
+      <div class="reveal delay-1 image-area-vertical" style="border-color: rgba(0, 160, 233, 0.3); box-shadow: 0 0 20px rgba(0, 160, 233, 0.15);">
+        <img src="idea2.jpg" alt="참-씰 링 목업">
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-content-wrapper grid-2-image-split">
+      <div class="reveal">
+        <div class="section-badge">IDEA 03</div>
+        <h2 class="slide-title">날카로움을 비틀다<br><span class="highlight-yellow">컷 & 프레스 키트</span></h2>
+        
+        <div class="idea-text-box" style="border-color: var(--orange);">
+          <div class="focus-keyword" style="color: var(--orange);">날카로운 공포에서 강력한 '주방 도구'로</div>
+          <p>날카롭다는 건 절삭력이 좋고 단단하다는 뜻입니다. 버려지는 뚜껑 중앙에 전용 핸들을 결합해 '피자 커터'나 '호떡 누르개' 등 유용한 굿즈로 재탄생시킵니다.</p>
+        </div>
+
+        <div class="support-text-box">
+          <h4>에이전트의 마케팅 포인트</h4>
+          <p>위험하다는 근원적 공포를 소재적 자산의 증명으로 뒤집습니다. 타깃이 직접 따고 만들어보는 유쾌한 업사이클링 경험은 브랜드에 대한 거부감을 흥미로 전환시킵니다.</p>
+        </div>
+      </div>
+      <div class="reveal delay-1 image-area-vertical" style="border-color: rgba(244, 83, 33, 0.25); box-shadow: 0 0 20px rgba(244, 83, 33, 0.1);">
+        <img src="idea3.jpg" alt="컷 앤 프레스 키트 목업">
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-content-wrapper" style="text-align: center; max-width: 1200px;">
+      <div class="reveal">
+        <div class="section-badge" style="background: var(--mid-blue);">EXPECTED EFFECT</div>
+        <h2 class="slide-title">단점이 <span class="highlight-cyan">장점</span>이 되는 순간,<br>동원참치는 다시 압도적 <span class="highlight-red">1등</span>이 됩니다.</h2>
+        <p class="slide-subtitle">강철 뚜껑은 더 이상 아킬레스건이 아닌, 우리만의 강력한 브랜드 무기가 됩니다.</p>
+      </div>
+      
+      <div class="reveal delay-1 grid-2-image-split" style="gap: 2vw; max-width: 900px; margin: 40px auto 0;">
+        <div class="info-card" style="text-align: left; border-top: 4px solid var(--red);">
+          <h3 class="highlight-red">Trial 확대</h3>
+          <p>구매를 망설이던 심리적 허들을 완벽히 제거합니다.</p>
+        </div>
+        <div class="info-card" style="text-align: left; border-top: 4px solid var(--cyan);">
+          <h3 class="highlight-cyan">고유의 자산화</h3>
+          <p>오직 우리만이 할 수 있는 브랜드 무기를 구축합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-controls reveal">
+  <button class="nav-btn" onclick="prevSlide()">◀</button>
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <button class="nav-btn" onclick="nextSlide()">▶</button>
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const progressBar = document.getElementById('progressBar');
+  const totalSlides = slides.length;
+
+  function updateSlide() {
+    slides.forEach((slide, index) => {
+      if (index === currentSlide) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+      }
+    });
+    
+    const progress = ((currentSlide + 1) / totalSlides) * 100;
+    progressBar.style.width = progress + '%';
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+      currentSlide++;
+      updateSlide();
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateSlide();
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      prevSlide();
+    }
+  });
+
+  updateSlide();
+</script>
+
+</body>
+</html>
